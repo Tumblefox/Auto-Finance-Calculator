@@ -1,0 +1,87 @@
+{% raw %}
+<h3 class="text-xl font-bold">Total Vehicle Cost</h3>
+
+<table class="table-auto w-full">
+  <tbody>
+    {% if isPayingCash %}
+      <tr>
+        <td><b>Cash</b></td>
+        <td class="text-right"><b>{{ cashTotal }}</b></td>
+      <tr>
+      <tr>
+        <td class="pl-5">Asking Price</td>
+        <td class="text-right">{{ price }}</td>
+      <tr>
+      <tr>
+        <td class="pl-5">Fees</td>
+        <td class="text-right">{{ fees }}</td>
+      <tr>
+      <tr>
+        <td class="pl-5">Trade-In</td>
+        <td class="text-right">{{ tradeIn }}</td>
+      <tr>
+      <tr>
+        <td class="pl-5">Sales Tax</td>
+        <td class="text-right">{{ cashTax }}</td>
+      <tr>
+      <tr>
+        <td class="pl-10">Tax Rate</td>
+        <td class="text-right">{{ taxRate }}</td>
+      <tr>
+      <tr>
+        <td class="pl-5">Tags/Title</td>
+        <td class="text-right">{{ tags }}</td>
+      <tr>
+    {% else %}
+      <tr>
+        <td><b>Loan</b></td>
+        <td class="text-right"><b>{{ loanTotal }}</b></td>
+      <tr>
+      <tr>
+        <td>Principal</td>
+        <td class="text-right">{{ principal }}</td>
+      <tr>
+      <tr>
+        <td class="pl-5">Asking Price</td>
+        <td class="text-right">{{ price }}</td>
+      <tr>
+      <tr>
+        <td class="pl-5">Trade-In</td>
+        <td class="text-right">{{ tradeIn }}</td>
+      <tr>
+      <tr>
+        <td class="pl-5">Down Payment</td>
+        <td class="text-right">{{ downPayment }}</td>
+      <tr>
+      <tr>
+        <td class="pl-5">Sales Tax (included in loan)</td>
+        <td class="text-right">{{ loanTax }}</td>
+      <tr>
+      <tr>
+        <td class="pl-10">Tax Rate</td>
+        <td class="text-right">{{ taxRate }}</td>
+      <tr>
+      <tr>
+        <td class="pl-5">Fees</td>
+        <td class="text-right">{{ fees }}</td>
+      <tr>
+      <tr>
+        <td class="pl-5">Tags/Title</td>
+        <td class="text-right">{{ tags }}</td>
+      <tr>
+      <tr>
+        <td>Interest</td>
+        <td class="text-right">{{ interest }}</td>
+      <tr>
+      <tr>
+        <td class="pl-5">APR</td>
+        <td class="text-right">{{ apr }}</td>
+      <tr>
+      <tr>
+        <td class="pl-5">Loan Terms</td>
+        <td class="text-right">{{ terms }}</td>
+      <tr>
+    {% endif %}
+  </tbody>
+</table>
+{% endraw %}

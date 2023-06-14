@@ -1,0 +1,48 @@
+{% raw %}
+<h3 class="text-xl font-bold">Additional Annual Expenses</h3>
+
+<table class="table-auto w-full">
+  <tbody>
+    <tr>
+      <td><b>Expenses</b></td>
+      <td class="text-right"><b>{{ expenses }}</b></td>
+    <tr>
+
+    <tr>
+      <td class="pl-5">Fuel</td>
+      <td class="text-right">{{ fuel }}</td>
+    <tr>
+    <tr>
+      <td class="pl-10">Gas (or equivalent) used per year</td>
+      <td class="text-right">{{ fuelUsed }}</td>
+    <tr>
+    <tr>
+      <td class="pl-10">Annual Mileage</td>
+      <td class="text-right">{{ miles }}</td>
+    <tr>
+    <tr>
+      <td class="pl-10">MPG/MPGe</td>
+      <td class="text-right">{{ mpg }}</td>
+    <tr>
+    <tr>
+      <td class="pl-10">Gas Price per Gallon</td>
+      <td class="text-right">{{ gasPrice }}</td>
+    <tr>
+
+    <tr>
+      <td class="pl-5">Insurance</td>
+      <td class="text-right">{{ insurance }}</td>
+    <tr>
+
+    <tr>
+      <td class="pl-5">Maintenance</td>
+      <td class="text-right">{{ maintenance }}</td>
+    <tr>
+
+    <tr>
+      <td class="pl-5">Repair</td>
+      <td class="text-right">{{ repairs }}</td>
+    <tr>
+  </tbody>
+</table>
+{% endraw %}

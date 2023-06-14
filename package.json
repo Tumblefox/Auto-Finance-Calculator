@@ -1,0 +1,15 @@
+{
+  "name": "auto-finance-calculator",
+  "version": "1.0.0",
+  "description": "Discover the complete cost of purchasing your vehicle.",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx @11ty/eleventy",
+    "dev": "npx @11ty/eleventy --serve"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@11ty/eleventy": "^2.0.1"
+  }
+}

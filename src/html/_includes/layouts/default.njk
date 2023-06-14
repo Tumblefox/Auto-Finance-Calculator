@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>{{ title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="description" content="{{ description }}">
+    {% include "../partials/scripts.njk" %}
+    {% include "../partials/styles.njk" %}
+  </head>
+
+  <body>
+    <header class="p-5 bg-indigo-600">
+      {% block header %}
+      {% endblock %}
+    </header>
+
+  	<main class="p-5">
+      {% block main %}
+      {% endblock %}
+  	</main>
+
+    {% block customscripts %}
+    {% endblock %}
+
+  </body>
+</html>
