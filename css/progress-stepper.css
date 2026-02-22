@@ -1,0 +1,59 @@
+#progress-stepper button {
+  position: relative;
+  display: block;
+  margin: auto;
+  background: #ccc;
+  padding: 2px;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+}
+#progress-stepper button:after {
+  content: ' ';
+  position: absolute;
+  display: block;
+  left: 100%;
+  top: 50%;
+  bottom: 50%;
+  height: 2px;
+  width: 100%;
+  transform: scale(2, 1);
+  transform-origin: -100% 50%;
+  background-color: rgba(0, 0, 0, 0.25);
+  z-index: -1;
+}
+#progress-stepper li:last-child button:after {
+  display: none;
+}
+@media (max-width: 720px) {
+  #progress-stepper button:after {
+    transform: scale(1.6, 1);
+  }
+}
+@media (max-width: 639px) {
+  #progress-stepper button:after {
+    transform: scale(2, 1);
+    transform-origin: -250% 50%;
+  }
+  #progress-stepper li:nth-child(3) button:after {
+    display: none;
+  }
+}
+@media (max-width: 560px) {
+  #progress-stepper button:after {
+    transform: scale(1.7, 1);
+  }
+}
+@media (max-width: 450px) {
+  #progress-stepper button:after {
+    transform-origin: -150% 50%;
+  }
+}
+
+
+#progress-stepper span {
+  text-align: center;
+  display: block;
+  margin: 4px 0 0 0;
+  font-size: 0.75rem;
+}

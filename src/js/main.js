@@ -1,4 +1,19 @@
+import nunjucks from 'nunjucks';
+import * as stepper from "./progress-stepper.js";
+
 (() => {
+  const unitOptions = {
+    miles: {name: "miles", abbreviation: "mi."},
+    kilometers: {name: "kilometers", abbreviation: "km."},
+    gallons: {name: "gallons", abbreviation: "gal."},
+    litres: {name: "litres", abbreviation: "L"},
+    kilowatt_hours: {name: "kilowatt-hours", abbreviation: "kWh"},
+    dollars: {symbol: "$", code: "USD"},
+    euros: {symbol: "€", code: "EUR"},
+    yen: {symbol: "¥", code: "JPY"},
+    pounds: {symbol: "£", code: "GBP"}
+  }
+
   var values = {};
 
   var totalsCache = {
@@ -6,11 +21,18 @@
     loanMonthlyCost: 0,
     loanVehicleTotal: 0,
     monthlyExpenses: 0
-  }
+  };
 
-  const formatter = new Intl.NumberFormat('en-US', {
+  var units = {
+    distance: unitOptions.miles,
+    volume: unitOptions.gallons,
+    currency: unitOptions.dollars,
+    energy: unitOptions.kilowatt_hours
+  };
+
+  var formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
+    currency: units.currency.code,
   });
 
   window.addEventListener("load", (ev) => {
@@ -24,9 +46,16 @@
     // initialize special elements
     let elements = [
       {selector: "form", event: "submit", function: formSubmission},
-      {selector: "#paying-cash", event: "click", function: toggleFinanceOptions},
+      {selector: "#financing-cash", event: "click", function: toggleFinanceOptions},
+      {selector: "#financing-loan", event: "click", function: toggleFinanceOptions},
+      {selector: "#fuel-type-combustion", event: "click", function: toggleFuelOptions},
+      {selector: "#fuel-type-electric", event: "click", function: toggleFuelOptions},
       {selector: "#down-payment-one", event: "keyup", function: downPayments},
       {selector: "#down-payment-two", event: "keyup", function: downPayments},
+      {selector: "#electric-efficiency-one", event: "keyup", function: electricEfficiency},
+      {selector: "#electric-efficiency-two", event: "keyup", function: electricEfficiency},
+      {selector: "#combustion-efficiency-one", event: "keyup", function: combustionEfficiency},
+      {selector: "#combustion-efficiency-two", event: "keyup", function: combustionEfficiency},
       {selector: "#loan-terms-other", event: "keyup", function: customLoanTerms},
       {selector: "#annual-insurance-one", event: "keyup", function: insuranceCosts},
       {selector: "#annual-insurance-two", event: "keyup", function: insuranceCosts},
@@ -49,9 +78,54 @@
       }
       if (isNumberOrText) {
         input.addEventListener("keyup", loadResults);
+        input.addEventListener("focus", () => input.select());
         return;
       }
     });
+
+    // Set preference inputs
+    form.querySelectorAll("select.preference").forEach(select => {
+      select.addEventListener("change", () => {
+        let key = select.id.replace("preference-", "");
+        let value = select.value;
+        units[key] = unitOptions[value];
+
+        switch(key) {
+          case "distance":
+            [
+              'label[for="combustion-efficiency-one"] span.distance-value',
+              'label[for="combustion-efficiency-two"] span.distance-value',
+              'label[for="electric-efficiency-one"] span.distance-value',
+              'label[for="electric-efficiency-two"] span.distance-value',
+            ].forEach(id => {
+              document.querySelector(id).innerText = units.distance.abbreviation;
+            });
+          case "volume":
+            [
+              'label[for="combustion-efficiency-one"] span.volume-value',
+              'label[for="combustion-efficiency-two"] span.volume-value',
+              'label[for="gas-price"] span.volume-value'
+            ].forEach(id => {
+              document.querySelector(id).innerText = units.volume.abbreviation;
+            });
+          case "currency":
+            formatter = new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: units.currency.code,
+            });
+            [
+              'label[for="down-payment-one"]'
+            ].forEach(id => {
+              document.querySelector(id).innerText = units.currency.symbol;
+            });
+            break;
+        }
+
+        loadResults();
+      })
+    });
+
+    stepper.initializeStepper();
   }
 
   function loadResults() {
@@ -59,17 +133,21 @@
       parseValues();
       calculate();
     }
-    catch(exception) {console.log("Results Error")}
+    catch(error) {
+      console.log("Results Error");
+      console.log(error);
+    }
   }
 
   function formSubmission(ev) {
     ev.preventDefault();
     loadResults();
+    stepper.specifyStep("cost-breakdown");
   }
 
   function toggleFinanceOptions(ev) {
     let container = document.getElementById("financing-options");
-    if(ev.target.checked) {
+    if(ev.target.value === "cash") {
       container.classList.add("hidden");
     }
     else {
@@ -77,20 +155,77 @@
     }
   }
 
+  function toggleFuelOptions(ev) {
+    let combustionContainer = document.getElementById("combustion-options");
+    let electricContainer = document.getElementById("electric-options");
+    if(ev.target.value === "combustion") {
+      electricContainer.classList.add("hidden");
+      combustionContainer.classList.remove("hidden");
+    }
+    else {
+      electricContainer.classList.remove("hidden");
+      combustionContainer.classList.add("hidden");
+    }
+  }
+
   function downPayments(ev) {
     try {
+      let price = document.querySelector("#asking-price").value;
+      if(Number(price) == 0) {
+        return;
+      }
+
       if(ev.target.id === "down-payment-one") {
-        let price = document.querySelector("#asking-price").value;
         let value = document.querySelector("#down-payment-one").value;
-        document.querySelector("#down-payment-two").value = Math.round((value / price) * 100);
+        if(Number(value) == 0) {
+          return;
+        }
+        document.querySelector("#down-payment-two").value = Number(((value / price) * 100).toFixed(2));
       }
       else {
-        let price = document.querySelector("#asking-price").value;
         let value = document.querySelector("#down-payment-two").value;
-        document.querySelector("#down-payment-one").value = Math.round((price * (1 + (value / 100))));
+        if(Number(value) == 0) {
+          return;
+        }
+
+        document.querySelector("#down-payment-one").value = Number(((value / 100) * price).toFixed(2));
       }
     }
-    catch(exception) {}
+    catch(error) {
+      console.log(`An error occurred calculating the down payment: ${error}`);
+    }
+  }
+
+  function electricEfficiency(ev) {
+    try {
+      if(ev.target.id === "electric-efficiency-one") {
+        let unitPerkWh = ev.target.value;
+        document.querySelector("#electric-efficiency-two").value = Number(((1 / unitPerkWh) * 100).toFixed(2));
+      }
+      else {
+        let kWhPer100Units = ev.target.value;
+        document.querySelector("#electric-efficiency-one").value = Number((100 / kWhPer100Units).toFixed(2));
+      }
+    }
+    catch(error) {
+      console.log(`An error occurred calculating EV efficiency: ${error}`);
+    }
+  }
+
+  function combustionEfficiency(ev) {
+    try {
+      if(ev.target.id === "combustion-efficiency-one") {
+        let unitPerVolume = ev.target.value;
+        document.querySelector("#combustion-efficiency-two").value = Number(((1 /  unitPerVolume) * 100).toFixed(2));
+      }
+      else {
+        let volumePer100Units = ev.target.value;
+        document.querySelector("#combustion-efficiency-one").value = Number((100 / volumePer100Units).toFixed(2));
+      }
+    }
+    catch(error) {
+      console.log(`An error occurred calculating ICE vehicle efficiency: ${error}`);
+    }
   }
 
   function insuranceCosts(ev) {
@@ -104,7 +239,9 @@
         document.querySelector("#annual-insurance-one").value = Math.round(value * 12);
       }
     }
-    catch(exception) {}
+    catch(error) {
+      console.log(`An error occurred calculating insurance cost: ${error}`);
+    }
   }
 
   function customLoanTerms(ev) {
@@ -126,11 +263,8 @@
       }
     }
 
-    values["paying-cash"] = document.getElementById("paying-cash").checked;
-  }
-
-  function parse(value) {
-    return value ? Number(value) : 0;
+    values["paying-cash"] = document.getElementById("financing-cash").checked;
+    values["combustion-fuel"] = document.getElementById("fuel-type-combustion").checked;
   }
 
   function parse(value) {
@@ -182,7 +316,9 @@
     let tags = parse(values["tags-title"]);
     let tradeIn = parse(values["trade-in"]);
     let downPayment = parse(values["down-payment-one"]);
-    let loanTerm = values["loan-terms-other"] ? Number(values["loan-terms-other"]) : parse(values["loan-terms"]);
+    let loanTerm = values["loan-terms-other"]
+    ? Number(values["loan-terms-other"])
+    : parse(values["loan-terms"]);
     let apr = parse(values["apr"]) / 100;
     let r = apr / 12;
 
@@ -193,8 +329,9 @@
     let loanCost = cost - downPayment;
     let loanTax = cost * tax;
     let principal = loanCost + loanTax;
-    let loanTotal = ((principal * loanTerm * r) / (1 - Math.pow(1 + r, -loanTerm))) + downPayment;
-    let interest = loanTotal - principal - downPayment;
+    let financeTotal = ((principal * loanTerm * r) / (1 - Math.pow(1 + r, -loanTerm)));
+    let loanTotal = financeTotal + downPayment + fees + tags;
+    let interest = financeTotal - principal;
 
     totals.cashTotal = currencyFormat(cashTotal);
     totals.fees = currencyFormat(fees);
@@ -223,26 +360,54 @@
     let totals = {};
 
     let insurance = parse(values["annual-insurance-one"]);
-    let miles = parse(values["annual-mileage"]);
-    let mpg = parse(values["mpg"]);
-    let gasPrice = parse(values["gas-price"]);
-    let fuelUsed = Math.round(miles / mpg);
-    let fuel = fuelUsed * gasPrice;
+    let milage = parse(values["annual-mileage"]);
     let maintenance = parse(values["annual-maintenance"]);
     let repairs = parse(values["annual-repair"]);
+
+    let distanceUnit = units.distance;
+    let fuelUnit;
+
+    let efficiency;
+    let efficiencyUnits;
+    let fuelPrice;
+    let fuelUsed;
+    let fuel;
+
+    let combustionFuelUsed = values["combustion-fuel"];
+    if(combustionFuelUsed) {
+      efficiency = parse(values["combustion-efficiency-one"]);
+      fuelPrice = parse(values["gas-price"]);
+      fuelUsed = Math.round(milage / efficiency);
+      fuel = fuelUsed * fuelPrice;
+      fuelUnit = units.volume;
+    }
+    else {
+      efficiency = parse(values["electric-efficiency-one"]);
+      fuelPrice = parse(values["electricity-price"]);
+      fuelUsed = Math.round(milage / efficiency);
+      fuel = fuelUsed * fuelPrice;
+      fuelUnit = units.energy;
+    }
+
+    efficiencyUnits = `${distanceUnit.abbreviation}/${fuelUnit.abbreviation}`;
 
     let annualTotal = insurance + maintenance + repairs + fuel;
     let cashTotal = annualTotal / 12;
 
     totals.expenses = currencyFormat(annualTotal);
     totals.fuel = currencyFormat(fuel);
-    totals.fuelUsed = `${fuelUsed} gallons`;
-    totals.miles = `${miles} miles`;
-    totals.mpg = mpg;
-    totals.gasPrice = currencyFormat(gasPrice);
+    totals.fuelUsed = fuelUsed.toLocaleString();
+    totals.annualMilage = milage.toLocaleString();
+    totals.efficiency = efficiency;
+    totals.fuelPrice = currencyFormat(fuelPrice);
     totals.insurance = currencyFormat(insurance);
     totals.maintenance = currencyFormat(maintenance);
     totals.repairs = currencyFormat(repairs);
+
+    totals.efficiencyUnits = efficiencyUnits;
+    totals.distanceUnit = distanceUnit;
+    totals.fuelUnit = fuelUnit;
+
 
     totalsCache.monthlyExpenses = cashTotal;
 
@@ -255,27 +420,42 @@
     let totals = {};
 
     let income = parse(values["annual-income"]);
+    let ownershipDuration = parse(values["ownership-time"]);
     let monthlyExpenses = totalsCache.monthlyExpenses;
 
 
     if(values["paying-cash"]) {
+      // Cash total = total vehicle cost + (monthly expenses * ownership time in years)
+      let cashTotalCost = totalsCache.vehicleTotal + (ownershipDuration * monthlyExpenses);
+      let cashCostIncomeShare = Math.round(((monthlyExpenses * 12) / income) * 100);
+      let cashOwnerDuration = `<small>(after ${ownershipDuration} years)</small>`;
+
       totals = {
-        paymentType: "Paid in Full",
-        cost: currencyFormat(totalsCache.vehicleTotal),
+        paymentType: "Paid with Cash",
+        cost: `${currencyFormat(cashTotalCost)} ${cashOwnerDuration}`,
         monthlyCost: currencyFormat(monthlyExpenses),
-        incomeShare: Math.round(((monthlyExpenses * 12) / income) * 100)
+        incomeShare: cashCostIncomeShare
       };
     }
     else {
-      let loanTerm = values["loan-terms-other"] ? Number(values["loan-terms-other"]) : parse(values["loan-terms"]);
+      // Loan total = total loan cost + (monthly expenses * ownership time in years)
+      let loanTerm = values["loan-terms-other"]
+      ? Number(values["loan-terms-other"])
+      : parse(values["loan-terms"]);
+
       let monthlyPayment = totalsCache.loanVehicleTotal / loanTerm;
       let loanMonthlyCost = monthlyExpenses + monthlyPayment;
-      let loanTotalCost = totalsCache.loanVehicleTotal + (loanTerm * monthlyExpenses);
+      let loanTotalCost = totalsCache.loanVehicleTotal + (ownershipDuration * monthlyExpenses);
+      let loanCostIncomeShare = Math.round(((loanMonthlyCost * 12) / income) * 100);
+      let loanOwnerDuration = ((loanTerm / 12) - ownershipDuration) <= 0
+      ? `<small>(after ${ownershipDuration} years)</small>`
+      : `<small>(after ${ownershipDuration} years; ${(loanTerm / 12) - ownershipDuration} years left on loan)</small>`;
+
       totals = {
-        paymentType: "Financed",
-        cost: `${currencyFormat(loanTotalCost)} <small>(after ${loanTerm / 12} years)</small>`,
+        paymentType: "Paid with a Loan",
+        cost: `${currencyFormat(loanTotalCost)} ${loanOwnerDuration}`,
         monthlyCost: currencyFormat(loanMonthlyCost),
-        incomeShare: Math.round(((loanMonthlyCost * 12) / income) * 100)
+        incomeShare: loanCostIncomeShare
       };
     }
 

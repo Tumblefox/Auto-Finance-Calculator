@@ -1,0 +1,29 @@
+<div id="fuel-section" class="hidden pane">
+  <h3 class="text-2xl mb-2">Fuel<h3>
+  <fieldset class="mb-4">
+    <div>
+      {{
+        inputs.radioOptions("Fuel Type", "fuel-type", [
+          {id: "fuel-type-combustion", value: "combustion", label:"Combustion", checked: true},
+          {id: "fuel-type-electric", value: "electric", label:"Electric"}
+        ])
+      }}
+    </div>
+
+    <div id="combustion-options" class="mb-2">
+      {{ inputs.dualNumberInput("combustion-efficiency", "Efficiency (Combined)", '<span class="distance-value">mi</span>/<span class="volume-value">gal.</span>', '<span class="volume-value">gal.</span>/100 <span class="distance-value">mi</span>', 26, 3.85) }}
+
+      <div class="grid grid-cols-2">
+        {{ inputs.number("gas-price", 'Fuel Price (per <span class="volume-value">gal.</span>)', 2.87) }}
+      </div>
+    </div>
+
+    <div id="electric-options" class="mb-2 hidden">
+      {{ inputs.dualNumberInput("electric-efficiency", "Efficiency (Combined)", '<span class="distance-value">mi</span>/kWh', 'kWh/100 <span class="distance-value">mi</span>', 3.4, 29.41) }}
+
+      <div class="grid grid-cols-2">
+        {{ inputs.number("electricity-price", "Fuel Price (Per kWh)", 0.38) }}
+      </div>
+    </div>
+  </fieldset>
+</div>

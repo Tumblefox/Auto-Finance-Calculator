@@ -1,0 +1,46 @@
+{% extends "./_includes/layouts/default.njk" %}
+{% import "./_includes/macros/inputs.njk" as inputs %}
+
+{% set title = "Auto Finance Calculator" %}
+{% set description = "Calculate a vehicle's total cost of ownership factoring in maintenance, insurance, fuel, financing, and more over any time horizon." %}
+
+{% block header %}
+  <img class="inline-block w-16" src="image/icon.png">
+  <h1 id="main-title" class="text-4xl font-bold text-white inline">Auto Finance Calculator</h1>
+  <p class="text-white">
+    <small>2026 Edition</small>
+  </p>
+{% endblock %}
+
+{% block main %}
+  <article>
+    <section class="mb-2">
+      {% include "./_includes/components/progress-stepper.njk" %}
+    </section>
+
+    <section class="mb-2 p-2">
+      <form>
+        {% include "./_includes/components/personal-section.njk" %}
+
+        {% include "./_includes/components/purchase-section.njk" %}
+
+        {% include "./_includes/components/fuel-section.njk" %}
+
+        {% include "./_includes/components/insurance-section.njk" %}
+
+        {% include "./_includes/components/maintenance-section.njk" %}
+
+        <button type="button" id="stepper-previous" class="py-2 px-4 rounded stepper-button">&#10229;</button>
+
+        <button type="button" id="stepper-next" class="py-2 px-4 rounded stepper-button">&#10230;</button>
+
+        <button id="results-button" type="submit" class="py-2 px-4 rounded">Results</button>
+      </form>
+    </section>
+
+    {% include "./_includes/components/cost-breakdown.njk" %}
+
+  </article>
+
+  {% include "./_includes/components/warning-alert.njk" %}
+{% endblock %}

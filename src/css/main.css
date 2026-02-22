@@ -1,0 +1,90 @@
+@import "./typography.css";
+@import "./progress-stepper.css";
+
+:root {
+  /* --accent-color: #4f46e5;
+  --accent-color-light: #615ae2; */
+  --accent-color: #131f34;
+  --accent-color-light: #8b6508;
+  /* --accent-color: black;
+  --accent-color-light: gray; */
+  --gray: #898989;
+}
+
+body {
+  font-family: SinkinSans, sans-serif;
+}
+
+article {
+  max-width: 800px;
+  margin: auto;
+}
+
+header {
+  background: var(--accent-color);
+}
+
+form {
+  accent-color: var(--accent-color-light);
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+#results-button {
+  background: var(--accent-color);
+  transition: 0.2s;
+  font-weight: bold;
+  color: white;
+}
+#results-button:hover {
+  background: var(--accent-color-light);
+}
+
+#main-title {
+  font-weight: 100;
+}
+
+.pane {
+}
+
+.bg-accent {
+  background: var(--accent-color);
+}
+
+.border-accent {
+  border-color: var(--accent-color);
+}
+
+.text-accent {
+  color: var(--accent-color);
+}
+
+.focus-accent:focus {
+  border-color: var(--accent-color-light);
+  outline-color: var(--accent-color-light);
+}
+
+.active-step {
+  background: var(--accent-color) !important;
+  color: white;
+}
+
+.stepper-button {
+  border-color: #000000;
+  border-style: solid;
+  border-width: 1px;
+  transition: 0.2s;
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+.stepper-button:hover {
+  background: var(--accent-color-light);
+  color: white;
+}

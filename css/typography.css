@@ -1,0 +1,99 @@
+@font-face {
+  font-family: SinkinSans;
+  src: url(/fonts/SinkinSans-100Thin.otf);
+  font-weight: 100;
+}
+@font-face {
+  font-family: SinkinSans;
+  src: url(/fonts/SinkinSans-100ThinItalic.otf);
+  font-weight: 100;
+  font-style: italic;
+}
+@font-face {
+  font-family: SinkinSans;
+  src: url(/fonts/SinkinSans-200XLight.otf);
+  font-weight: 200;
+}
+@font-face {
+  font-family: SinkinSans;
+  src: url(/fonts/SinkinSans-200XLightItalic.otf);
+  font-weight: 200;
+  font-style: italic;
+}
+@font-face {
+  font-family: SinkinSans;
+  src: url(/fonts/SinkinSans-300Light.otf);
+  font-weight: 300;
+}
+@font-face {
+  font-family: SinkinSans;
+  src: url(/fonts/SinkinSans-300LightItalic.otf);
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: SinkinSans;
+  src: url(/fonts/SinkinSans-400Regular.otf);
+  font-weight: 400;
+}
+@font-face {
+  font-family: SinkinSans;
+  src: url(/fonts/SinkinSans-400Italic.otf);
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: SinkinSans;
+  src: url(/fonts/SinkinSans-500Medium.otf);
+  font-weight: 500;
+}
+@font-face {
+  font-family: SinkinSans;
+  src: url(/fonts/SinkinSans-500MediumItalic.otf);
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: SinkinSans;
+  src: url(/fonts/SinkinSans-600SemiBold.otf);
+  font-weight: 600;
+}
+@font-face {
+  font-family: SinkinSans;
+  src: url(/fonts/SinkinSans-600SemiBoldItali.otf);
+  font-weight: 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: SinkinSans;
+  src: url(/fonts/SinkinSans-700Bold.otf);
+  font-weight: 700;
+}
+@font-face {
+  font-family: SinkinSans;
+  src: url(/fonts/SinkinSans-700BoldItalic.otf);
+  font-weight: 700;
+  font-style: italic;
+}
+@font-face {
+  font-family: SinkinSans;
+  src: url(/fonts/SinkinSans-800Black.otf);
+  font-weight: 800;
+}
+@font-face {
+  font-family: SinkinSans;
+  src: url(/fonts/SinkinSans-800BlackItalic.otf);
+  font-weight: 800;
+  font-style: italic;
+}
+@font-face {
+  font-family: SinkinSans;
+  src: url(/fonts/SinkinSans-900XBlack.otf);
+  font-weight: 900;
+}
+@font-face {
+  font-family: SinkinSans;
+  src: url(/fonts/SinkinSans-900XBlackItalic.otf);
+  font-weight: 900;
+  font-style: italic;
+}

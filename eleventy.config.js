@@ -1,12 +1,27 @@
-module.exports = function(eleventyConfig) {
-  eleventyConfig.addPassthroughCopy({"src/js/**/*": "js"});
-  eleventyConfig.addPassthroughCopy({"src/css/**/*": "css"});
-  eleventyConfig.addPassthroughCopy({"src/image/**/*": "image"});
+import * as esbuild from 'esbuild';
+
+export default async function(eleventyConfig) {
+  eleventyConfig.addPassthroughCopy({
+    "src/css/**/*": "css",
+    "src/image/**/*": "image",
+    "src/fonts/**/*": "fonts",
+    "src/js/**/*": "js",
+  });
+
+  eleventyConfig.on("eleventy.after", async () => {
+    await esbuild.build({
+      entryPoints: ["./src/js/main.js"],
+      bundle: true,
+      outfile: "./js/main.js",
+      minify: true,
+      sourcemap: true,
+    });
+  });
 
   return {
     dir: {
-      input: "src/html",
-      // output: "./"
+      input: "./src",
+      output: "./"
     }
   }
 };

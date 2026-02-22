@@ -1,0 +1,43 @@
+<div id="purchase-section" class="hidden pane">
+  <h3 class="text-2xl mb-2">Purchase<h3>
+  <fieldset class="mb-4">
+    <div class="grid grid-cols-2 gap-x-6 gap-y-6 mb-2">
+      {{ inputs.number("asking-price", "Asking Price", 38000) }}
+      {{ inputs.numberDecimal("sales-tax", "Sales Tax", 6) }}
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-6 mb-2">
+      {{ inputs.number("trade-in", "Trade-in Value", "0") }}
+      {{ inputs.number("tags-title", "Tags/Title Cost", 2000) }}
+      {{ inputs.number("fees", "Fees", 2000) }}
+    </div>
+
+    <div>
+      {{ inputs.checkbox("paying-cash", "Paying in Full - All Cash") }}
+      {{
+        inputs.radioOptions("Financing", "financing", [
+          {id: "financing-loan", value: "loan", label:"Loan", checked: true},
+          {id: "financing-cash", value: "cash", label:"Cash"}
+        ])
+      }}
+    </div>
+
+    <div id="financing-options" class="mt-2">
+      {{ inputs.dualNumberInput("down-payment", "Down Payment", "$", "%", 4500, 12) }}
+
+      {{
+        inputs.radioOptions("Loan Terms", "loan-terms", [
+          {id: "loan-terms-36", value: "36", label:"36 Months"},
+          {id: "loan-terms-48", value: "48", label:"48 Months"},
+          {id: "loan-terms-60", value: "60", label:"60 Months"},
+          {id: "loan-terms-72", value: "72", label:"72 Months", checked: true},
+          {id: "loan-terms-84", value: "84", label:"84 Months"}
+        ], true)
+      }}
+
+      <div class="grid grid-cols-2 gap-x-6 gap-y-6 mb-2">
+        {{ inputs.numberDecimal("apr", "Annual Percentage Rate (APR) %", 6) }}
+      </div>
+    </div>
+  </fieldset>
+</div>
